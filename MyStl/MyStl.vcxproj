@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="hh_alloc.h" />
+    <ClInclude Include="hh_allocate.h" />
     <ClInclude Include="hh_alloc_test.h" />
   </ItemGroup>
   <ItemGroup>
