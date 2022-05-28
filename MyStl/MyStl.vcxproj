@@ -139,9 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="hh_construct.h" />
     <ClInclude Include="hh_alloc.h" />
     <ClInclude Include="hh_allocate.h" />
     <ClInclude Include="hh_alloc_test.h" />
+    <ClInclude Include="hh_iterator.h" />
+    <ClInclude Include="hh_type_traits.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

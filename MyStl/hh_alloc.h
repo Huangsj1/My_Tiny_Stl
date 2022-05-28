@@ -1,5 +1,6 @@
 #pragma once
 
+//内存池分配
 #include <iostream>
 #include <cstdio>
 #include <cstddef>
@@ -28,7 +29,7 @@ namespace hh_stl
 		static size_t heap_size;						//总分配的内存字节数
 
 	public:
-		static void* allocate(size_t n);
+		static void* allocate(size_t n);		//n是字节
 		static void deallocate(void* p, size_t n);
 		static void* reallocate(void* p, size_t old_size, size_t new_size);
 
@@ -57,7 +58,7 @@ namespace hh_stl
 	void* hh_alloc::allocate(size_t n)
 	{
 		if (n > static_cast<size_t> (H_Max_Bytes))			//大于链表最大字节数（直接用malloc）
-			return std::malloc(n);
+			return ::malloc(n);
 
 		H_Node** my_free_list = free_list + my_freelist_index(n);
 		H_Node* result = *my_free_list;
@@ -71,7 +72,7 @@ namespace hh_stl
 	void hh_alloc::deallocate(void* p, size_t n)
 	{
 		if (n > static_cast<size_t> (H_Max_Bytes))			
-			return std::free(p);
+			return ::free(p);
 
 		H_Node** my_free_list = free_list + my_freelist_index(n);		//将回收的节点放入到链表的第一个位置
 		H_Node* q = reinterpret_cast<H_Node*> (p);
