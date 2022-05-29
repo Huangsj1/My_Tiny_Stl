@@ -4,6 +4,7 @@
 #include "hh_construct.h"
 #include "hh_type_traits.h"
 #include "hh_iterator.h"
+#include "hh_rb_tree.h"
 
 int main()
 {

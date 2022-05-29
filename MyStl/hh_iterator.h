@@ -6,6 +6,8 @@
 
 namespace hh_stl
 {
+	template<class Iterator>
+	struct iterator_traits;
 
 	struct input_iterator_tag {};
 	struct output_iterator_tag {};
@@ -13,6 +15,7 @@ namespace hh_stl
 	struct bidirectional_iterator_tag : public forward_iterator_tag {};
 	struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
+	//-------------------------------------------------------------------------正向迭代器--------------------------------------------------------------
 	//iterator模板
 	template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
 	struct iterator
@@ -24,8 +27,145 @@ namespace hh_stl
 		typedef Distance	difference_type;
 	};
 
+	//--------------------------------------------------------------------------反向迭代器-----------------------------------------------------------
+	//reverse_iterator模板
+	template<class Iterator>
+	class reverse_iterator
+	{
+	public:
+		typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
+		typedef typename iterator_traits<Iterator>::value_type			value_type;
+		typedef typename iterator_traits<Iterator>::pointer				pointer;
+		typedef typename iterator_traits<Iterator>::reference			reference;
+		typedef typename iterator_traits<Iterator>::difference_type		difference_type;
 
-	//-------------------------------------------------------------------iterator_traits----------------------------------------------------------
+		typedef Iterator iterator_type;
+		typedef reverse_iterator<Iterator> self;
+
+	private:
+		iterator_type current;
+
+	public:
+		iterator_type& base() const { return current; }
+
+	public:
+		//构造函数
+		reverse_iterator() {}
+		explicit reverse_iterator(iterator_type it) : current(it) {}
+		reverse_iterator(const self& rhs) : current(rhs.current) {}
+
+	public:
+		//重载操作符
+		reference operator*() const
+		{
+			self temp(*this);
+			return *--temp;
+		}
+
+		pointer operator->() const
+		{
+			return &*this;
+		}
+
+		reference operator[](difference_type n) const		//不可直接交给current去做（current[n]），因为是反向，与正向不同
+		{
+			return *(*this + n);
+		}
+
+		self& operator++()
+		{
+			--current;
+			return *this;
+		}
+
+		self operator++(int)
+		{
+			self temp(*this);
+			--current;
+			return temp;
+		}
+
+		self& operator--()
+		{
+			++current;
+			return *this;
+		}
+
+		self operator--(int)
+		{
+			self temp(*this);
+			++current;
+			return temp;
+		}
+
+		self& operator+=(difference_type n)
+		{
+			current -= n;
+			return *this;
+		}
+
+		self& operator-=(difference_type n)
+		{
+			current += n;
+			return *this;
+		}
+
+		self operator+(difference_type n) const
+		{
+			return self(current - n);
+		}
+
+		self operator-(difference_type n) const
+		{
+			return self(current + n);
+		}
+	};
+
+	//重载其他的操作符（不属于该类）
+	template <class Iterator>
+	typename reverse_iterator<Iterator>::difference_type
+		operator- (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return rhs.base() - lhs.base();
+	}
+
+	template <class Iterator>
+	bool operator== (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return lhs.base() == rhs.base();
+	}
+
+	template <class Iterator>
+	bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
+	template <class Iterator>
+	bool operator< (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)		
+	{
+		return rhs.base() < lhs.base();			//反向了
+	}
+
+	template <class Iterator>
+	bool operator> (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return rhs < lhs;						//调用上面<
+	}
+
+	template <class Iterator>
+	bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return !(lhs > rhs);
+	}
+
+	template <class Iterator>
+	bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return !(lhs < rhs);
+	}
+
+	//-------------------------------------------------------------------iterator_traits---------------------------------------------------------------
 	//普通迭代器
 	template <class Iterator>
 	struct iterator_traits

@@ -58,7 +58,7 @@ namespace hh_stl
 
 	//---------------------------------------------------------------------空间配接器------------------------------------------------------------------
 	template <class T, class Alloc>
-	class hh_simple_alloc
+	class simple_alloc
 	{
 	public:
 		static T* allocate()
